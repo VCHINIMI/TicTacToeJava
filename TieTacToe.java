@@ -8,6 +8,10 @@ public class TieTacToe {
 		COMPUTER, USER
 	};
 
+	public enum gameRunningStatus {
+		WON, TIE, CONTINUE
+	};
+
 //Who shall Play first, toss
 	public static Player whoShallPlayFirst() {
 		Random random = new Random();
@@ -27,7 +31,7 @@ public class TieTacToe {
 		System.out.println("-----");
 		System.out.println(gameBoard[7] + "|" + gameBoard[8] + "|" + gameBoard[9]);
 	}
-	
+
 //Winning conditions
 	public static boolean isWinner(char[] board, char userCharacter) {
 		return (board[1] == userCharacter && board[2] == userCharacter && board[3] == userCharacter
@@ -75,40 +79,53 @@ public class TieTacToe {
 	}
 
 //User Make Move
-	public static void intitiateMove(char[] board, int index, char userCharacter) {
+	public static void intitiateMove(char[] board, int index, char letter) {
 		if (isCellEmpty(index, board))
-			board[index] = userCharacter;
+			board[index] = letter;
 	}
-	
+
 //Computer making move
-	public static int getNextComputerMove(char[] board, char computerGameCharacter,char userGameCharacter) {
+	public static int getNextComputerMove(char[] board, char computerGameCharacter, char userGameCharacter) {
 		int winningMove = winningMoveAvailable(board, computerGameCharacter);
-		if(winningMove!=0)
+		if (winningMove != 0)
 			return winningMove;
 		int userWinningMove = winningMoveAvailable(board, userGameCharacter);
-		if(userWinningMove!=0)
+		if (userWinningMove != 0)
 			return userWinningMove;
-		int[] movesList = {1,3,7,9,5,2,6,8,4};
-		for(int index =0; index<movesList.length;index++) {
-			if(isCellEmpty(index, board))
-				return index;
+		int[] cornerMoves = { 1, 3, 7, 9 };
+		int[] sideMoves = { 2, 4, 6, 8 };
+		int computerMove = getRandomMovesFromList(board, cornerMoves);
+		if (computerMove != 0)
+			return computerMove;
+		if (isCellEmpty(5, board))
+			return 5;
+		computerMove = getRandomMovesFromList(board, sideMoves);
+		if (computerMove != 0)
+			return computerMove;
+		return 0;
+	}
+
+	public static int getRandomMovesFromList(char[] board, int[] moves) {
+		for (int index = 0; index < moves.length; index++) {
+			if (isCellEmpty(moves[index], board))
+				return moves[index];
 		}
 		return 0;
 	}
-	
+
 //Check if any winning moves available
 	public static int winningMoveAvailable(char[] board, char character) {
-		for(int index = 1; index<=9;index++) {
-			char[] boardClone =getBoardClone(board);
-			if(isCellEmpty(index, boardClone)) {
+		for (int index = 1; index <= 9; index++) {
+			char[] boardClone = getBoardClone(board);
+			if (isCellEmpty(index, boardClone)) {
 				intitiateMove(boardClone, index, character);
-				if(isWinner(boardClone, character))
+				if (isWinner(boardClone, character))
 					return index;
 			}
 		}
 		return 0;
 	}
-	
+
 //Cloning Board to check for computer winning
 	public static char[] getBoardClone(char[] board) {
 		char[] boardClone = new char[10];
@@ -116,23 +133,65 @@ public class TieTacToe {
 		return boardClone;
 	}
 
+//gameRunningStatus
+	public static gameRunningStatus getGameStatus(char[] board, int move, char letter, String winMessage) {
+		intitiateMove(board, move, letter);
+		if (isWinner(board, letter)) {
+			displayBoard(board);
+			System.out.println(winMessage);
+			return gameRunningStatus.WON;
+		}
+		if (ifBoardIsFull(board)) {
+			displayBoard(board);
+			System.out.println("Game is tied");
+			return gameRunningStatus.TIE;
+		}
+		displayBoard(board);
+		return gameRunningStatus.CONTINUE;
+	}
+
+	public static boolean ifBoardIsFull(char[] board) {
+		for (int index = 1; index < board.length; index++) {
+			if (isCellEmpty(index, board))
+				return false;
+		}
+		return true;
+	}
+
 // Main Method
 	public static void main(String[] args) {
 		System.out.println("Welcome to Tic Tac Toe Program");
-		Player player = whoShallPlayFirst();
-		System.out.println(player);
 		char[] gameBoard = createGameBoard();
 		char userInGameCharacter = userGameCharacter();
-		char compInGameCharacter = ' ';
+		char compInGameCharacter;
 		if (userInGameCharacter == 'X')
 			compInGameCharacter = 'O';
 		else
 			compInGameCharacter = 'X';
-		intitiateMove(gameBoard, getNextUserMove(gameBoard), userInGameCharacter);
-		gameBoard[2]='X';
-//		System.out.println(isWinner(gameBoard, 'X'));
+		Player player = whoShallPlayFirst();
+		System.out.println(player+"Shall be playing first");
+		boolean gameRunning = true;
+		gameRunningStatus status;
 		displayBoard(gameBoard);
-		int computerNextMove = getNextComputerMove(gameBoard,compInGameCharacter,userInGameCharacter);
-		System.out.println(computerNextMove);
+		while (gameRunning) {
+			if (player.equals(Player.USER)) {
+//				displayBoard(gameBoard);
+				int userMove = getNextUserMove(gameBoard);
+				String message = "You have won";
+				status = getGameStatus(gameBoard, userMove, userInGameCharacter, message);
+				player = Player.COMPUTER;
+			} 
+			else  {
+				System.out.println("Computer's turn");
+				String message = "Computer Won";
+				int computerMove = getNextComputerMove(gameBoard, compInGameCharacter, userInGameCharacter);
+				status = getGameStatus(gameBoard, computerMove, compInGameCharacter, message);
+//				displayBoard(gameBoard);
+				player = Player.USER;
+			}
+			if (status.equals(gameRunningStatus.CONTINUE))
+				continue;
+			gameRunning = false;
+		}
 	}
 }
