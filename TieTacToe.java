@@ -21,23 +21,29 @@ public class TieTacToe {
 
 //check if cell is empty
 	public static boolean isCellEmpty(int index, char[] board) {
-		if(board[index]==' ')
+		if (board[index] == ' ')
 			return true;
-		else 
-			return false;		
-	}
-	
-//Get Users' next Move
-	public static int getNextUserMove(char board[]) {
-		while(true) {	
-			System.out.println("Enter next Move");
-			int userNextMove = userInputScanner.nextInt();	
-			if(userNextMove>0&&userNextMove<=9&&isCellEmpty(userNextMove, board))
-				return userNextMove;
-		}		
+		else
+			return false;
 	}
 
-	// Main Method
+//Get Users' next Move
+	public static int getNextUserMove(char board[]) {
+		while (true) {
+			System.out.println("Enter next Move");
+			int userNextMove = userInputScanner.nextInt();
+			if (userNextMove > 0 && userNextMove <= 9 && isCellEmpty(userNextMove, board))
+				return userNextMove;
+		}
+	}
+
+//User Make Move
+	public static void intitiateMove(char[] board, int index, char userCharacter) {
+		if (isCellEmpty(index, board))
+			board[index] = userCharacter;
+	}
+
+// Main Method
 	public static void main(String[] args) {
 		System.out.println("Welcome to Tic Tac Toe Program");
 		char[] gameBoard = createGameBoard();
@@ -47,6 +53,6 @@ public class TieTacToe {
 			compInGameCharacter = 'O';
 		else
 			compInGameCharacter = 'X';
-		System.out.println(getNextUserMove(gameBoard));
+		intitiateMove(gameBoard, getNextUserMove(gameBoard), userInGameCharacter);
 	}
 }
