@@ -1,6 +1,7 @@
 import java.util.Random;
 import java.util.Scanner;
 
+
 public class TieTacToe {
 	public static Scanner userInputScanner = new Scanner(System.in);
 
@@ -25,7 +26,7 @@ public class TieTacToe {
 //Display board feature
 	public static void displayBoard(char[] gameBoard) {
 		System.out.println("\n");
-		System.out.println(gameBoard[1] + "|" + gameBoard[2] + "|" + gameBoard[2]);
+		System.out.println(gameBoard[1] + "|" + gameBoard[2] + "|" + gameBoard[3]);
 		System.out.println("-----");
 		System.out.println(gameBoard[4] + "|" + gameBoard[5] + "|" + gameBoard[6]);
 		System.out.println("-----");
@@ -75,6 +76,8 @@ public class TieTacToe {
 			int userNextMove = userInputScanner.nextInt();
 			if (userNextMove > 0 && userNextMove <= 9 && isCellEmpty(userNextMove, board))
 				return userNextMove;
+			else 
+				System.out.println("Invalid move");
 		}
 	}
 
@@ -92,8 +95,8 @@ public class TieTacToe {
 		int userWinningMove = winningMoveAvailable(board, userGameCharacter);
 		if (userWinningMove != 0)
 			return userWinningMove;
-		int[] cornerMoves = { 1, 3, 7, 9 };
-		int[] sideMoves = { 2, 4, 6, 8 };
+		int[] cornerMoves = {1, 3, 7, 9};
+		int[] sideMoves = {2, 4, 6, 8};
 		int computerMove = getRandomMovesFromList(board, cornerMoves);
 		if (computerMove != 0)
 			return computerMove;
@@ -115,7 +118,7 @@ public class TieTacToe {
 
 //Check if any winning moves available
 	public static int winningMoveAvailable(char[] board, char character) {
-		for (int index = 1; index <= 9; index++) {
+		for (int index = 1; index <board.length; index++) {
 			char[] boardClone = getBoardClone(board);
 			if (isCellEmpty(index, boardClone)) {
 				intitiateMove(boardClone, index, character);
@@ -129,7 +132,7 @@ public class TieTacToe {
 //Cloning Board to check for computer winning
 	public static char[] getBoardClone(char[] board) {
 		char[] boardClone = new char[10];
-		boardClone = board.clone();
+		System.arraycopy(board, 0, boardClone, 0, board.length);
 		return boardClone;
 	}
 
@@ -146,7 +149,6 @@ public class TieTacToe {
 			System.out.println("Game is tied");
 			return gameRunningStatus.TIE;
 		}
-		displayBoard(board);
 		return gameRunningStatus.CONTINUE;
 	}
 
@@ -161,7 +163,7 @@ public class TieTacToe {
 // Main Method
 	public static void main(String[] args) {
 		System.out.println("Welcome to Tic Tac Toe Program");
-		char[] gameBoard = createGameBoard();
+		final char[] gameBoard = createGameBoard();
 		char userInGameCharacter = userGameCharacter();
 		char compInGameCharacter;
 		if (userInGameCharacter == 'X')
@@ -172,10 +174,9 @@ public class TieTacToe {
 		System.out.println(player+"Shall be playing first");
 		boolean gameRunning = true;
 		gameRunningStatus status;
-		displayBoard(gameBoard);
 		while (gameRunning) {
 			if (player.equals(Player.USER)) {
-//				displayBoard(gameBoard);
+				displayBoard(gameBoard);
 				int userMove = getNextUserMove(gameBoard);
 				String message = "You have won";
 				status = getGameStatus(gameBoard, userMove, userInGameCharacter, message);
@@ -186,12 +187,12 @@ public class TieTacToe {
 				String message = "Computer Won";
 				int computerMove = getNextComputerMove(gameBoard, compInGameCharacter, userInGameCharacter);
 				status = getGameStatus(gameBoard, computerMove, compInGameCharacter, message);
-//				displayBoard(gameBoard);
 				player = Player.USER;
 			}
 			if (status.equals(gameRunningStatus.CONTINUE))
 				continue;
 			gameRunning = false;
 		}
+		userInputScanner.close();
 	}
 }
