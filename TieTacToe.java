@@ -88,7 +88,7 @@ public class TieTacToe {
 		int userWinningMove = winningMoveAvailable(board, userGameCharacter);
 		if(userWinningMove!=0)
 			return userWinningMove;
-		int[] movesList = {1,3,7,9};
+		int[] movesList = {1,3,7,9,5,2,6,8,4};
 		for(int index =0; index<movesList.length;index++) {
 			if(isCellEmpty(index, board))
 				return index;
