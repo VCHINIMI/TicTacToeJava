@@ -18,18 +18,35 @@ public class TieTacToe {
 		char userCharacter = userInputScanner.next().charAt(0);
 		return userCharacter;
 	}
+
+//check if cell is empty
+	public static boolean isCellEmpty(int index, char[] board) {
+		if(board[index]==' ')
+			return true;
+		else 
+			return false;		
+	}
 	
-	//Main Method	
+//Get Users' next Move
+	public static int getNextUserMove(char board[]) {
+		while(true) {	
+			System.out.println("Enter next Move");
+			int userNextMove = userInputScanner.nextInt();	
+			if(userNextMove>0&&userNextMove<=9&&isCellEmpty(userNextMove, board))
+				return userNextMove;
+		}		
+	}
+
+	// Main Method
 	public static void main(String[] args) {
 		System.out.println("Welcome to Tic Tac Toe Program");
-		createGameBoard();
+		char[] gameBoard = createGameBoard();
 		char userInGameCharacter = userGameCharacter();
 		char compInGameCharacter = ' ';
-		if(userInGameCharacter == 'X')
+		if (userInGameCharacter == 'X')
 			compInGameCharacter = 'O';
 		else
 			compInGameCharacter = 'X';
-		System.out.println(userInGameCharacter+" "+compInGameCharacter);
-		
+		System.out.println(getNextUserMove(gameBoard));
 	}
 }
