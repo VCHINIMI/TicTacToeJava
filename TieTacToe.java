@@ -1,8 +1,6 @@
 import java.util.Random;
 import java.util.Scanner;
 
-import com.sun.security.auth.NTDomainPrincipal;
-
 public class TieTacToe {
 	public static Scanner userInputScanner = new Scanner(System.in);
 
@@ -90,6 +88,11 @@ public class TieTacToe {
 		int userWinningMove = winningMoveAvailable(board, userGameCharacter);
 		if(userWinningMove!=0)
 			return userWinningMove;
+		int[] movesList = {1,3,7,9};
+		for(int index =0; index<movesList.length;index++) {
+			if(isCellEmpty(index, board))
+				return index;
+		}
 		return 0;
 	}
 	
@@ -126,10 +129,8 @@ public class TieTacToe {
 		else
 			compInGameCharacter = 'X';
 		intitiateMove(gameBoard, getNextUserMove(gameBoard), userInGameCharacter);
-		for(int i = 0; i <3;i++) {
-			gameBoard[i]='X';
-		}
-		System.out.println(isWinner(gameBoard, 'X'));
+		gameBoard[2]='X';
+//		System.out.println(isWinner(gameBoard, 'X'));
 		displayBoard(gameBoard);
 		int computerNextMove = getNextComputerMove(gameBoard,compInGameCharacter,userInGameCharacter);
 		System.out.println(computerNextMove);
