@@ -1,7 +1,22 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class TieTacToe {
 	public static Scanner userInputScanner = new Scanner(System.in);
+
+	public enum Player {
+		COMPUTER, USER
+	};
+
+//Who shall Play first, toss
+	public static Player whoShallPlayFirst() {
+		Random random = new Random();
+		int toss = random.nextInt(2);
+		if (toss == 0)
+			return Player.USER;
+		else
+			return Player.COMPUTER;
+	}
 
 //Initialising Game Board	
 	public static char[] createGameBoard() {
@@ -46,6 +61,8 @@ public class TieTacToe {
 // Main Method
 	public static void main(String[] args) {
 		System.out.println("Welcome to Tic Tac Toe Program");
+		Player player = whoShallPlayFirst();
+		System.out.println(player);
 		char[] gameBoard = createGameBoard();
 		char userInGameCharacter = userGameCharacter();
 		char compInGameCharacter = ' ';
