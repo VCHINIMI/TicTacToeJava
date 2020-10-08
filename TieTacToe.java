@@ -83,10 +83,13 @@ public class TieTacToe {
 	}
 	
 //Computer making move
-	public static int getNextComputerMove(char[] board, char computerGameCharacter) {
+	public static int getNextComputerMove(char[] board, char computerGameCharacter,char userGameCharacter) {
 		int winningMove = winningMoveAvailable(board, computerGameCharacter);
 		if(winningMove!=0)
 			return winningMove;
+		int userWinningMove = winningMoveAvailable(board, userGameCharacter);
+		if(userWinningMove!=0)
+			return userWinningMove;
 		return 0;
 	}
 	
@@ -128,7 +131,7 @@ public class TieTacToe {
 		}
 		System.out.println(isWinner(gameBoard, 'X'));
 		displayBoard(gameBoard);
-		int computerNextMove = getNextComputerMove(gameBoard,compInGameCharacter);
+		int computerNextMove = getNextComputerMove(gameBoard,compInGameCharacter,userInGameCharacter);
 		System.out.println(computerNextMove);
 	}
 }
