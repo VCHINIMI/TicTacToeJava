@@ -1,6 +1,8 @@
 import java.util.Random;
 import java.util.Scanner;
 
+import com.sun.security.auth.NTDomainPrincipal;
+
 public class TieTacToe {
 	public static Scanner userInputScanner = new Scanner(System.in);
 
@@ -79,6 +81,34 @@ public class TieTacToe {
 		if (isCellEmpty(index, board))
 			board[index] = userCharacter;
 	}
+	
+//Computer making move
+	public static int getNextComputerMove(char[] board, char computerGameCharacter) {
+		int winningMove = winningMoveAvailable(board, computerGameCharacter);
+		if(winningMove!=0)
+			return winningMove;
+		return 0;
+	}
+	
+//Check if any winning moves available
+	public static int winningMoveAvailable(char[] board, char character) {
+		for(int index = 1; index<=9;index++) {
+			char[] boardClone =getBoardClone(board);
+			if(isCellEmpty(index, boardClone)) {
+				intitiateMove(boardClone, index, character);
+				if(isWinner(boardClone, character))
+					return index;
+			}
+		}
+		return 0;
+	}
+	
+//Cloning Board to check for computer winning
+	public static char[] getBoardClone(char[] board) {
+		char[] boardClone = new char[10];
+		boardClone = board.clone();
+		return boardClone;
+	}
 
 // Main Method
 	public static void main(String[] args) {
@@ -93,10 +123,12 @@ public class TieTacToe {
 		else
 			compInGameCharacter = 'X';
 		intitiateMove(gameBoard, getNextUserMove(gameBoard), userInGameCharacter);
-		for(int i = 0; i <4;i++) {
+		for(int i = 0; i <3;i++) {
 			gameBoard[i]='X';
 		}
 		System.out.println(isWinner(gameBoard, 'X'));
 		displayBoard(gameBoard);
+		int computerNextMove = getNextComputerMove(gameBoard,compInGameCharacter);
+		System.out.println(computerNextMove);
 	}
 }
